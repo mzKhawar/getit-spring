@@ -1,7 +1,7 @@
 package dev.mzkhawar.getit;
 
-import dev.mzkhawar.getit.domain.dto.WeightDto;
-import dev.mzkhawar.getit.domain.entities.WeightEntity;
+import dev.mzkhawar.getit.model.dto.WeightDto;
+import dev.mzkhawar.getit.model.entities.Weight;
 
 import java.time.LocalDateTime;
 
@@ -10,27 +10,27 @@ public final class TestDataUtil {
     private TestDataUtil() {}
 
 
-    public static WeightEntity createTestWeightEntityA() {
-        return WeightEntity.builder()
+    public static Weight createTestWeightEntityA() {
+        return Weight.builder()
                 .weightId(1L)
                 .weightInPounds(250.2)
-                .recordedAt(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
+                .recordedOn(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
                 .build();
     }
 
-    public static WeightEntity createTestWeightEntityB() {
-        return WeightEntity.builder()
+    public static Weight createTestWeightEntityB() {
+        return Weight.builder()
                 .weightId(2L)
                 .weightInPounds(240.4)
-                .recordedAt(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
+                .recordedOn(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
                 .build();
     }
 
-    public static WeightEntity createTestWeightEntityC() {
-        return WeightEntity.builder()
+    public static Weight createTestWeightEntityC() {
+        return Weight.builder()
                 .weightId(3L)
                 .weightInPounds(230.3)
-                .recordedAt(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
+                .recordedOn(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
                 .build();
     }
 

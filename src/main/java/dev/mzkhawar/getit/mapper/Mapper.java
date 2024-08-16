@@ -1,4 +1,4 @@
-package dev.mzkhawar.getit.mappers;
+package dev.mzkhawar.getit.mapper;
 
 public interface Mapper<A, B> {
 

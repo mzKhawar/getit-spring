@@ -1,8 +1,8 @@
-package dev.mzkhawar.getit.services.impl;
+package dev.mzkhawar.getit.service.impl;
 
-import dev.mzkhawar.getit.domain.entities.WeightEntity;
-import dev.mzkhawar.getit.repositories.WeightRepository;
-import dev.mzkhawar.getit.services.WeightService;
+import dev.mzkhawar.getit.model.entities.Weight;
+import dev.mzkhawar.getit.repository.WeightRepository;
+import dev.mzkhawar.getit.service.WeightService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,19 +12,19 @@ import java.util.stream.StreamSupport;
 @Service
 public class WeightServiceImpl implements WeightService {
 
-    private WeightRepository weightRepository;
+    private final WeightRepository weightRepository;
 
     public WeightServiceImpl(WeightRepository weightRepository) {
         this.weightRepository = weightRepository;
     }
 
     @Override
-    public WeightEntity save(WeightEntity weightEntity) {
-        return weightRepository.save(weightEntity);
+    public Weight save(Weight weight) {
+        return weightRepository.save(weight);
     }
 
     @Override
-    public List<WeightEntity> findAll() {
+    public List<Weight> findAll() {
         return StreamSupport.stream(weightRepository
                 .findAll()
                 .spliterator(),
@@ -33,7 +33,7 @@ public class WeightServiceImpl implements WeightService {
     }
 
     @Override
-    public Optional<WeightEntity> findById(Long id) {
+    public Optional<Weight> findById(Long id) {
         return weightRepository.findById(id);
     }
 
@@ -43,11 +43,11 @@ public class WeightServiceImpl implements WeightService {
     }
 
     @Override
-    public WeightEntity partialUpdate(Long id, WeightEntity weightEntity) {
-        weightEntity.setWeightId(id);
+    public Weight partialUpdate(Long id, Weight weight) {
+        weight.setWeightId(id);
         return weightRepository.findById(id).map(existingWeight -> {
-            Optional.ofNullable(weightEntity.getWeightInPounds()).ifPresent(existingWeight::setWeightInPounds);
-            Optional.ofNullable(weightEntity.getRecordedAt()).ifPresent(existingWeight::setRecordedAt);
+            Optional.ofNullable(weight.getWeightInPounds()).ifPresent(existingWeight::setWeightInPounds);
+            Optional.ofNullable(weight.getRecordedOn()).ifPresent(existingWeight::setRecordedOn);
             return weightRepository.save(existingWeight);
         }).orElseThrow(() -> new RuntimeException("Weight not found"));
     }

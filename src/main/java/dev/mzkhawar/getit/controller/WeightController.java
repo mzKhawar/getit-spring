@@ -1,9 +1,9 @@
-package dev.mzkhawar.getit.controllers;
+package dev.mzkhawar.getit.controller;
 
-import dev.mzkhawar.getit.domain.dto.WeightDto;
-import dev.mzkhawar.getit.domain.entities.WeightEntity;
-import dev.mzkhawar.getit.mappers.Mapper;
-import dev.mzkhawar.getit.services.WeightService;
+import dev.mzkhawar.getit.model.dto.WeightDto;
+import dev.mzkhawar.getit.model.entities.Weight;
+import dev.mzkhawar.getit.mapper.Mapper;
+import dev.mzkhawar.getit.service.WeightService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,29 +17,29 @@ public class WeightController {
 
     private final WeightService weightService;
 
-    private final Mapper<WeightEntity, WeightDto> weightMapper;
+    private final Mapper<Weight, WeightDto> weightMapper;
 
-    public WeightController(final WeightService weightService, final Mapper<WeightEntity, WeightDto> weightMapper) {
+    public WeightController(final WeightService weightService, final Mapper<Weight, WeightDto> weightMapper) {
         this.weightService = weightService;
         this.weightMapper = weightMapper;
     }
 
     @PostMapping("")
     public ResponseEntity<WeightDto> createWeight(@RequestBody final WeightDto weight) {
-        WeightEntity weightEntity = weightMapper.mapFrom(weight);
-        WeightEntity savedWeightEntity = weightService.save(weightEntity);
-        return new ResponseEntity<>(weightMapper.mapTo(savedWeightEntity), HttpStatus.CREATED);
+        Weight weightEntity = weightMapper.mapFrom(weight);
+        Weight savedWeight = weightService.save(weightEntity);
+        return new ResponseEntity<>(weightMapper.mapTo(savedWeight), HttpStatus.CREATED);
     }
 
     @GetMapping("")
     public ResponseEntity<List<WeightDto>> getAllWeights() {
-        List<WeightEntity> weightEntities =  weightService.findAll();
+        List<Weight> weightEntities =  weightService.findAll();
         return new ResponseEntity<>(weightEntities.stream().map(weightMapper::mapTo).toList(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<WeightDto> getWeightById(@PathVariable final Long id) {
-        Optional<WeightEntity> foundWeight = weightService.findById(id);
+        Optional<Weight> foundWeight = weightService.findById(id);
         return foundWeight.map(weightEntity -> {
             WeightDto weightDto = weightMapper.mapTo(weightEntity);
             return new ResponseEntity<>(weightDto, HttpStatus.OK);
@@ -52,9 +52,9 @@ public class WeightController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         weightDto.setId(id);
-        WeightEntity weightEntity = weightMapper.mapFrom(weightDto);
-        WeightEntity savedWeightEntity = weightService.save(weightEntity);
-        return new ResponseEntity<>(weightMapper.mapTo(savedWeightEntity), HttpStatus.OK);
+        Weight weight = weightMapper.mapFrom(weightDto);
+        Weight savedWeight = weightService.save(weight);
+        return new ResponseEntity<>(weightMapper.mapTo(savedWeight), HttpStatus.OK);
     }
 
     @PatchMapping("{id}")
@@ -62,8 +62,8 @@ public class WeightController {
         if (!weightService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        WeightEntity weightEntity = weightMapper.mapFrom(weightDto);
-        WeightEntity updatedWeight = weightService.partialUpdate(id, weightEntity);
+        Weight weight = weightMapper.mapFrom(weightDto);
+        Weight updatedWeight = weightService.partialUpdate(id, weight);
         return new ResponseEntity<>(weightMapper.mapTo(updatedWeight), HttpStatus.OK);
     }
 

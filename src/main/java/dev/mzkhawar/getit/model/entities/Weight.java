@@ -1,4 +1,4 @@
-package dev.mzkhawar.getit.domain.entities;
+package dev.mzkhawar.getit.model.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,16 +13,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "weight")
-public class WeightEntity {
+public class Weight {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "weight_id_seq")
     private Long weightId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private Users user;
+
     private Double weightInPounds;
 
-    // @CreationTimestamp
-    private LocalDateTime recordedAt;
+    private LocalDateTime recordedOn;
 
 }

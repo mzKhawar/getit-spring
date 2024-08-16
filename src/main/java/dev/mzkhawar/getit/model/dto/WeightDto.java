@@ -1,4 +1,4 @@
-package dev.mzkhawar.getit.domain.dto;
+package dev.mzkhawar.getit.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
