@@ -27,7 +27,7 @@ public class WeightEntityRepositoryIntegrationTests {
 
     @Test
     public void testWeightCanBeCreatedAndRead() {
-        WeightEntity weightEntity = TestDataUtil.createTestWeightA();
+        WeightEntity weightEntity = TestDataUtil.createTestWeightEntityA();
         weightRepository.save(weightEntity);
 
         Optional<WeightEntity> result = weightRepository.findById(weightEntity.getWeightId());
@@ -37,11 +37,11 @@ public class WeightEntityRepositoryIntegrationTests {
 
     @Test
     public void testMutipleWeightsCanBeCreatedAndRecalled() {
-        WeightEntity weightEntityA = TestDataUtil.createTestWeightA();
+        WeightEntity weightEntityA = TestDataUtil.createTestWeightEntityA();
         weightRepository.save(weightEntityA);
-        WeightEntity weightEntityB = TestDataUtil.createTestWeightB();
+        WeightEntity weightEntityB = TestDataUtil.createTestWeightEntityB();
         weightRepository.save(weightEntityB);
-        WeightEntity weightEntityC = TestDataUtil.createTestWeightC();
+        WeightEntity weightEntityC = TestDataUtil.createTestWeightEntityC();
         weightRepository.save(weightEntityC);
 
         Iterable<WeightEntity> result = weightRepository.findAll();
@@ -50,7 +50,7 @@ public class WeightEntityRepositoryIntegrationTests {
 
     @Test
     public void testWeightCanBeUpdated() {
-        WeightEntity weightEntityA = TestDataUtil.createTestWeightA();
+        WeightEntity weightEntityA = TestDataUtil.createTestWeightEntityA();
         weightRepository.save(weightEntityA);
         weightEntityA.setWeightInPounds(300.1);
         weightRepository.save(weightEntityA);
@@ -62,7 +62,7 @@ public class WeightEntityRepositoryIntegrationTests {
 
     @Test
     public void testWeightCanBeDeleted() {
-        WeightEntity weightEntityA = TestDataUtil.createTestWeightA();
+        WeightEntity weightEntityA = TestDataUtil.createTestWeightEntityA();
         weightRepository.save(weightEntityA);
         weightRepository.deleteById(weightEntityA.getWeightId());
 
@@ -72,11 +72,11 @@ public class WeightEntityRepositoryIntegrationTests {
 
     @Test
     public void testGetWeightLessThan() {
-        WeightEntity weightEntityA = TestDataUtil.createTestWeightA();
+        WeightEntity weightEntityA = TestDataUtil.createTestWeightEntityA();
         weightRepository.save(weightEntityA);
-        WeightEntity weightEntityB = TestDataUtil.createTestWeightB();
+        WeightEntity weightEntityB = TestDataUtil.createTestWeightEntityB();
         weightRepository.save(weightEntityB);
-        WeightEntity weightEntityC = TestDataUtil.createTestWeightC();
+        WeightEntity weightEntityC = TestDataUtil.createTestWeightEntityC();
         weightRepository.save(weightEntityC);
 
         Iterable<WeightEntity> result = weightRepository.weightInPoundsLessThan(250);
@@ -86,11 +86,11 @@ public class WeightEntityRepositoryIntegrationTests {
 
     @Test
     public void testGetWeightGreaterThan() {
-        WeightEntity weightEntityA = TestDataUtil.createTestWeightA();
+        WeightEntity weightEntityA = TestDataUtil.createTestWeightEntityA();
         weightRepository.save(weightEntityA);
-        WeightEntity weightEntityB = TestDataUtil.createTestWeightB();
+        WeightEntity weightEntityB = TestDataUtil.createTestWeightEntityB();
         weightRepository.save(weightEntityB);
-        WeightEntity weightEntityC = TestDataUtil.createTestWeightC();
+        WeightEntity weightEntityC = TestDataUtil.createTestWeightEntityC();
         weightRepository.save(weightEntityC);
 
         Iterable<WeightEntity> result = weightRepository.findWeightGreaterThan(250);

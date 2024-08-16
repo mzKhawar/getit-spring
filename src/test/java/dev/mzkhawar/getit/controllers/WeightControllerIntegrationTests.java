@@ -1,8 +1,8 @@
 package dev.mzkhawar.getit.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.mzkhawar.getit.TestDataUtil;
+import dev.mzkhawar.getit.domain.dto.WeightDto;
 import dev.mzkhawar.getit.domain.entities.WeightEntity;
 import dev.mzkhawar.getit.services.WeightService;
 import org.junit.jupiter.api.Test;
@@ -38,8 +38,8 @@ public class WeightControllerIntegrationTests {
 
     @Test
     public void testCreateWeightReturns201Status() throws Exception {
-        WeightEntity testWeightA = TestDataUtil.createTestWeightA();
-        testWeightA.setWeightId(null);
+        WeightDto testWeightA = TestDataUtil.createTestWeightDtoA();
+        testWeightA.setId(null);
         String weightJson = objectMapper.writeValueAsString(testWeightA);
 
         mockMvc.perform(
@@ -53,8 +53,8 @@ public class WeightControllerIntegrationTests {
 
     @Test
     public void testCreateWeightReturnsSavedWeight() throws Exception {
-        WeightEntity testWeightA = TestDataUtil.createTestWeightA();
-        testWeightA.setWeightId(null);
+        WeightDto testWeightA = TestDataUtil.createTestWeightDtoA();
+        testWeightA.setId(null);
         String weightJson = objectMapper.writeValueAsString(testWeightA);
 
         mockMvc.perform(
@@ -70,12 +70,12 @@ public class WeightControllerIntegrationTests {
 
     @Test
     public void testGetAllWeightsReturnsStatus200() throws Exception {
-        WeightEntity weightA = TestDataUtil.createTestWeightA();
-        weightService.createWeight(weightA);
-        WeightEntity weightB = TestDataUtil.createTestWeightB();
-        weightService.createWeight(weightB);
-        WeightEntity weightC = TestDataUtil.createTestWeightC();
-        weightService.createWeight(weightC);
+        WeightEntity weightA = TestDataUtil.createTestWeightEntityA();
+        weightService.save(weightA);
+        WeightEntity weightB = TestDataUtil.createTestWeightEntityB();
+        weightService.save(weightB);
+        WeightEntity weightC = TestDataUtil.createTestWeightEntityC();
+        weightService.save(weightC);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/weights")
@@ -92,9 +92,8 @@ public class WeightControllerIntegrationTests {
 
     @Test
     public void testGetWeightByIdReturnsStatus200WhenExists() throws Exception {
-
-        WeightEntity weightA = TestDataUtil.createTestWeightA();
-        weightService.createWeight(weightA);
+        WeightEntity weightA = TestDataUtil.createTestWeightEntityA();
+        weightService.save(weightA);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/weights/1")
@@ -108,8 +107,8 @@ public class WeightControllerIntegrationTests {
     @Test
     public void testGetWeightByIdReturnsStatus404WhenNotExists() throws Exception {
 
-        WeightEntity weightA = TestDataUtil.createTestWeightA();
-        weightService.createWeight(weightA);
+        WeightEntity weightA = TestDataUtil.createTestWeightEntityA();
+        weightService.save(weightA);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/weights/99")
@@ -122,8 +121,8 @@ public class WeightControllerIntegrationTests {
 
     @Test
     public void testGetWeightByIdReturnsWeight() throws Exception {
-        WeightEntity testWeightA = TestDataUtil.createTestWeightA();
-        weightService.createWeight(testWeightA);
+        WeightEntity testWeightA = TestDataUtil.createTestWeightEntityA();
+        weightService.save(testWeightA);
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/weights/1")
@@ -132,6 +131,99 @@ public class WeightControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.id").value(1)
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.weightInPounds").value("250.2")
+        );
+    }
+
+    @Test
+    public void testFullUpdateWeightReturnsStatus200WhenExists() throws Exception {
+        WeightEntity testWeightA = TestDataUtil.createTestWeightEntityA();
+        weightService.save(testWeightA);
+        String weightJson = objectMapper.writeValueAsString(testWeightA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/weights/" + testWeightA.getWeightId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(weightJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testFullUpdateWeightReturnsStatus404WhenNotExists() throws Exception {
+        WeightDto testWeightA = TestDataUtil.createTestWeightDtoA();
+        String weightJson = objectMapper.writeValueAsString(testWeightA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/weights/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(weightJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testPartialUpdateWeightReturnsStatus200WhenExists() throws Exception {
+        WeightEntity testWeightA = TestDataUtil.createTestWeightEntityA();
+        WeightEntity savedWeightA = weightService.save(testWeightA);
+
+        WeightDto testWeightDtoA = TestDataUtil.createTestWeightDtoA();
+        testWeightA.setWeightInPounds(111.11);
+        String weightJson = objectMapper.writeValueAsString(testWeightDtoA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/weights/" + savedWeightA.getWeightId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(weightJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testPartialUpdateWeightReturnsUpdatedWeight() throws Exception {
+        WeightEntity testWeightA = TestDataUtil.createTestWeightEntityA();
+        WeightEntity savedWeightA = weightService.save(testWeightA);
+
+        WeightDto testWeightDtoA = TestDataUtil.createTestWeightDtoA();
+        testWeightDtoA.setWeightInPounds(111.11);
+        String weightJson = objectMapper.writeValueAsString(testWeightDtoA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/api/weights/" + savedWeightA.getWeightId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(weightJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").value(savedWeightA.getWeightId())
+
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.weightInPounds").value("111.11")
+        );
+    }
+
+    @Test
+    public void testDeleteWeightReturnsStatus204ForWeightNotExists() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/weights/99")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
+        );
+    }
+
+    @Test
+    public void testDeleteWeightReturnsStatus204ForWeightExists() throws Exception {
+        WeightEntity testWeightA = TestDataUtil.createTestWeightEntityA();
+        WeightEntity savedWeightA = weightService.save(testWeightA);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/weights/" + savedWeightA.getWeightId())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNoContent()
         );
     }
 

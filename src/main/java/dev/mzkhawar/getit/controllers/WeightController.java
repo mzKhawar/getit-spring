@@ -27,7 +27,7 @@ public class WeightController {
     @PostMapping("")
     public ResponseEntity<WeightDto> createWeight(@RequestBody final WeightDto weight) {
         WeightEntity weightEntity = weightMapper.mapFrom(weight);
-        WeightEntity savedWeightEntity = weightService.createWeight(weightEntity);
+        WeightEntity savedWeightEntity = weightService.save(weightEntity);
         return new ResponseEntity<>(weightMapper.mapTo(savedWeightEntity), HttpStatus.CREATED);
     }
 
@@ -44,5 +44,33 @@ public class WeightController {
             WeightDto weightDto = weightMapper.mapTo(weightEntity);
             return new ResponseEntity<>(weightDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<WeightDto> updateWeight(@PathVariable final Long id, @RequestBody final WeightDto weightDto) {
+        if (!weightService.isExists(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        weightDto.setId(id);
+        WeightEntity weightEntity = weightMapper.mapFrom(weightDto);
+        WeightEntity savedWeightEntity = weightService.save(weightEntity);
+        return new ResponseEntity<>(weightMapper.mapTo(savedWeightEntity), HttpStatus.OK);
+    }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<WeightDto> partialUpdateWeight(@PathVariable final Long id, @RequestBody final WeightDto weightDto) {
+        if (!weightService.isExists(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        WeightEntity weightEntity = weightMapper.mapFrom(weightDto);
+        WeightEntity updatedWeight = weightService.partialUpdate(id, weightEntity);
+        return new ResponseEntity<>(weightMapper.mapTo(updatedWeight), HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteWeight(@PathVariable final Long id) {
+        weightService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 }

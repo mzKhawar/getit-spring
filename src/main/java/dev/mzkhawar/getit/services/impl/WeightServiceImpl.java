@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -20,7 +19,7 @@ public class WeightServiceImpl implements WeightService {
     }
 
     @Override
-    public WeightEntity createWeight(WeightEntity weightEntity) {
+    public WeightEntity save(WeightEntity weightEntity) {
         return weightRepository.save(weightEntity);
     }
 
@@ -36,5 +35,25 @@ public class WeightServiceImpl implements WeightService {
     @Override
     public Optional<WeightEntity> findById(Long id) {
         return weightRepository.findById(id);
+    }
+
+    @Override
+    public boolean isExists(Long id) {
+        return weightRepository.existsById(id);
+    }
+
+    @Override
+    public WeightEntity partialUpdate(Long id, WeightEntity weightEntity) {
+        weightEntity.setWeightId(id);
+        return weightRepository.findById(id).map(existingWeight -> {
+            Optional.ofNullable(weightEntity.getWeightInPounds()).ifPresent(existingWeight::setWeightInPounds);
+            Optional.ofNullable(weightEntity.getRecordedAt()).ifPresent(existingWeight::setRecordedAt);
+            return weightRepository.save(existingWeight);
+        }).orElseThrow(() -> new RuntimeException("Weight not found"));
+    }
+
+    @Override
+    public void delete(Long id) {
+        weightRepository.deleteById(id);
     }
 }
