@@ -1,6 +1,5 @@
-package dev.mzkhawar.getit.domain;
+package dev.mzkhawar.getit.domain.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,16 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "weight")
-public class Weight {
+public class WeightDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "weight_id_seq")
-    private Long weightId;
+    private Long id;
 
     private Double weightInPounds;
 
     private LocalDateTime recordedAt;
-
 }
