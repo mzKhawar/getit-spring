@@ -3,6 +3,7 @@ package dev.mzkhawar.getit.controller;
 import dev.mzkhawar.getit.model.dto.WeightDto;
 import dev.mzkhawar.getit.model.entities.Weight;
 import dev.mzkhawar.getit.mapper.Mapper;
+import dev.mzkhawar.getit.repository.WeightRepository;
 import dev.mzkhawar.getit.service.WeightService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class WeightController {
 
     private final Mapper<Weight, WeightDto> weightMapper;
 
-    public WeightController(final WeightService weightService, final Mapper<Weight, WeightDto> weightMapper) {
+    public WeightController(final WeightService weightService, final Mapper<Weight, WeightDto> weightMapper, WeightRepository weightRepository) {
         this.weightService = weightService;
         this.weightMapper = weightMapper;
     }
@@ -48,7 +49,7 @@ public class WeightController {
 
     @PutMapping("/{id}")
     public ResponseEntity<WeightDto> updateWeight(@PathVariable final Long id, @RequestBody final WeightDto weightDto) {
-        if (!weightService.isExists(id)) {
+        if (!weightService.exists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         weightDto.setId(id);
@@ -59,7 +60,7 @@ public class WeightController {
 
     @PatchMapping("{id}")
     public ResponseEntity<WeightDto> partialUpdateWeight(@PathVariable final Long id, @RequestBody final WeightDto weightDto) {
-        if (!weightService.isExists(id)) {
+        if (!weightService.exists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Weight weight = weightMapper.mapFrom(weightDto);

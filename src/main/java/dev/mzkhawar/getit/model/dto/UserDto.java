@@ -6,17 +6,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class WeightDto {
+public class UserDto {
 
     private Long id;
-    private Double weightInPounds;
-    private LocalDateTime recordedOn;
-    private UserDto user;
+    private String username;
+    private String email;
+    private String password;
+    private String role;
+    private List<WeightDto> weights = new ArrayList<>();
+
 }

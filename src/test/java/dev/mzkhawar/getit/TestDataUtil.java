@@ -38,7 +38,7 @@ public final class TestDataUtil {
         return WeightDto.builder()
                 .id(1L)
                 .weightInPounds(250.2)
-                .recordedAt(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
+                .recordedOn(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
                 .build();
     }
 
@@ -46,7 +46,7 @@ public final class TestDataUtil {
         return WeightDto.builder()
                 .id(2L)
                 .weightInPounds(240.4)
-                .recordedAt(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
+                .recordedOn(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
                 .build();
     }
 
@@ -54,7 +54,7 @@ public final class TestDataUtil {
         return WeightDto.builder()
                 .id(3L)
                 .weightInPounds(230.3)
-                .recordedAt(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
+                .recordedOn(LocalDateTime.of(2024, 8, 15, 15, 55, 22))
                 .build();
     }
 }

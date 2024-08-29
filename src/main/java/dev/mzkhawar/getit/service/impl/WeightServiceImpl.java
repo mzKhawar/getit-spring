@@ -38,7 +38,7 @@ public class WeightServiceImpl implements WeightService {
     }
 
     @Override
-    public boolean isExists(Long id) {
+    public boolean exists(Long id) {
         return weightRepository.existsById(id);
     }
 

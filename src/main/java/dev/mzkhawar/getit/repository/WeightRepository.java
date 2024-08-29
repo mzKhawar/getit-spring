@@ -1,17 +1,22 @@
 package dev.mzkhawar.getit.repository;
 
 import dev.mzkhawar.getit.model.entities.Weight;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
-public interface WeightRepository extends CrudRepository<Weight, Long> {
+public interface WeightRepository extends JpaRepository<Weight, Long> {
 
-    Iterable<Weight> weightInPoundsLessThan(int age);
+    List<Weight> findWeightsByRecordedOn(LocalDateTime recordedOn);
 
-    Iterable<Weight> weightInPoundsGreaterThan(int age);
+    List<Weight> findWeightsByRecordedOnBefore(LocalDateTime recordedOn);
 
-    @Query("SELECT w from Weight w where w.weightInPounds > ?1")
-    Iterable<Weight> findWeightGreaterThan(int age);
+    List<Weight> findWeightByRecordedOnAfter(LocalDateTime recordedOn);
+
+    List<Weight> findWeightByUserId(Long userid);
+
+    List<Weight> weightInPoundsLessThan(int i);
 }

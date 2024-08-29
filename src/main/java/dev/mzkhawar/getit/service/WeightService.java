@@ -13,7 +13,7 @@ public interface WeightService {
 
     Optional<Weight> findById(Long id);
 
-    boolean isExists(Long id);
+    boolean exists(Long id);
 
     Weight partialUpdate(Long id, Weight weight);
 

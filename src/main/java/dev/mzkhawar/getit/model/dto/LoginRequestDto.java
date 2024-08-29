@@ -1,25 +1,21 @@
 package dev.mzkhawar.getit.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsersDto {
+public class LoginRequestDto {
 
-    private Long userId;
+    @NotBlank(message = "Username is required")
+    private String username;
 
-    private String userName;
-
+    @NotBlank(message = "Password is required")
     private String password;
 
-    private String email;
-
-    private LocalDateTime createdOn;
 }
