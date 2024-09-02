@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,6 +18,6 @@ public class WeightDto {
 
     private Long id;
     private Double weightInPounds;
-    private LocalDateTime recordedOn;
-    private UserDto user;
+    private LocalDate recordedOn;
+    private String userId;
 }

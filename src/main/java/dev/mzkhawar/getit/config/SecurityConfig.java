@@ -1,6 +1,8 @@
 package dev.mzkhawar.getit.config;
 
-import dev.mzkhawar.getit.filter.JwtFilter;
+import dev.mzkhawar.getit.filter.JwtAuthenticationFilter;
+import dev.mzkhawar.getit.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,30 +15,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-
-    private final JwtFilter jwtFilter;
-
-    public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
-        this.userDetailsService = userDetailsService;
-        this.jwtFilter = jwtFilter;
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setPasswordEncoder(new BCryptPasswordEncoder(10));
-        authProvider.setUserDetailsService(userDetailsService);
-        return authProvider;
-    }
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserRepository userRepository;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -48,18 +38,19 @@ public class SecurityConfig {
        return authenticationConfiguration.getAuthenticationManager();
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/users/login", "/api/users/register")
+                        .requestMatchers("/api/auth/authenticate", "/api/auth/register")
                         .permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // each request should be authenticated
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
